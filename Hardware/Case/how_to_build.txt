@@ -1,0 +1,20 @@
+SureShot Case can be built as following:
+
+- Case is created by acryl pannel, thickness of each pannel can be refered in files name:
+SureShot_bottom_inner_3mm.dwg
+SureShot_bottom_outer_2mm.dwg
+SureShot_top_pannel_5mm.dwg
+
+- How to build : stack pannels and pcb as following order:
+
+TOP--------------------------
+SureShot_top_pannel_5mm.dwg
+PCB
+SureShot_bottom_inner_3mm.dwg
+SureShot_bottom_outer_2mm.dwg
+BOTTOM-----------------------
+
+- set Screw, size is M3.
+
+- Enjoy!
+
