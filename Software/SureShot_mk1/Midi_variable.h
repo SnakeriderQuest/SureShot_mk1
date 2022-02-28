@@ -9,8 +9,8 @@ byte NOTE[TOTAL_BUTTONS];
 
 const uint8_t MIDI_CHANNEL_MAX = 0x15;
 const uint8_t MIDI_CHANNEL_MIN = 0x00;
-const uint8_t NOTE_MAX =0x6C; 
-const uint8_t NOTE_MIN =0x15;
+const uint8_t NOTE_MAX =0x7F; 
+const uint8_t NOTE_MIN =0x00;
 
 const uint8_t VELOCITY_MAX =0x7F; 
 const uint8_t VELOCITY_MIN =0x00;

@@ -43,8 +43,6 @@ void ComHandler()
           message.common.bin[i] = (uint8_t)Serial.read();
         }
 
-        Serial.write(message.common.command);
-        Serial.write(message.common.command);
         /*calculate checksum*/
         uint8_t checksum_of_packet = message.common.bin[message.common.byte_length];
         uint8_t calculated_checksum = MessageChecksumCalculation(&message);
@@ -59,7 +57,6 @@ void ComHandler()
             response.bin[i]=0x00;
           }
 
-          Serial.write(message.common.command);
           switch(message.common.command)
           {
             case cmd_request_protocol_version:
@@ -79,7 +76,6 @@ void ComHandler()
               break;
   
             case cmd_read_note:
-            Serial.write(message.common.command);
               read_note(&message, &response);
               break;
   
