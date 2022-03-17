@@ -31,80 +31,70 @@
 /*message definitions*/
 union Message
 { 
-  uint8_t bin[22];
-  
+  struct
+  {
+    uint8_t byte_length;    
+    uint8_t bin[18];
+  }write_interface;
+
+  struct
+  {
+    uint8_t byte_length;    
+    uint8_t bin[18];
+  }checksum_interface;
+
+
   struct 
   {
-  uint8_t header0;
-  uint8_t header1;
-  uint8_t mode; 
-  uint8_t command;
-  uint8_t byte_length;
-  uint8_t bin[17];
+    uint8_t byte_length;
+    uint8_t command;
+    uint8_t bin[17];
   }common;
 
   struct 
   {
-    uint8_t header0;
-    uint8_t header1;
-    uint8_t mode; 
-    uint8_t command;
     uint8_t byte_length;
+    uint8_t command;
     uint8_t parameter;
     uint8_t checksum;
   }request_protocol_version;
 
   struct
   {
-    uint8_t header0;
-    uint8_t header1;
-    uint8_t mode; 
+    uint8_t byte_length;    
     uint8_t command;
-    uint8_t byte_length;
     uint8_t pad_nr;
     uint8_t checksum;
   }play_request;
 
   struct
-  {
-    uint8_t header0;
-    uint8_t header1;
-    uint8_t mode; 
-    uint8_t command;
+  { 
     uint8_t byte_length;
+    uint8_t command;
     uint8_t parameter;
     uint8_t checksum;
   }read_midi_channel;
 
   struct 
   {
-    uint8_t header0;
-    uint8_t header1;
-    uint8_t mode; 
-    uint8_t command;
     uint8_t byte_length;
+    uint8_t command;
     uint8_t midi_channel;
     uint8_t checksum;
   }write_midi_channel;
 
   struct
   {
-  uint8_t header0;
-  uint8_t header1;
-  uint8_t mode; 
-  uint8_t command;
-  uint8_t byte_length;
-  uint8_t parameter;
-  uint8_t checksum;
+    uint8_t byte_length;    
+    uint8_t command;
+    uint8_t parameter;
+    uint8_t checksum;
   }read_note;
 
   struct
   {
-    uint8_t header0;
-    uint8_t header1;
-    uint8_t mode; 
-    uint8_t command;
     uint8_t byte_length;
+    uint8_t command;
     uint8_t pad_nr;
     uint8_t note;
     uint8_t checksum;
@@ -112,31 +102,22 @@ union Message
   
   struct write_all_note
   {
-    uint8_t header0;
-    uint8_t header1;
-    uint8_t mode; 
+    uint8_t byte_length;    
     uint8_t command;
-    uint8_t byte_length;
     uint8_t note[16];
     uint8_t checksum;
   }write_all_note;
 
   struct 
   {
-    uint8_t header0;
-    uint8_t header1;
-    uint8_t mode; 
-    uint8_t command;
     uint8_t byte_length;
+    uint8_t command;
     uint8_t parameter;
     uint8_t checksum;
   }read_velocity;
 
   struct 
   {
-    uint8_t header0;
-    uint8_t header1;
-    uint8_t mode; 
     uint8_t command;
     uint8_t byte_length;
     uint8_t pad_nr;
@@ -146,9 +127,6 @@ union Message
 
   struct
   {
-    uint8_t header0;
-    uint8_t header1;
-    uint8_t mode; 
     uint8_t command;
     uint8_t byte_length;
     uint8_t velocity[16];
@@ -157,9 +135,6 @@ union Message
 
   struct
   {
-    uint8_t header0;
-    uint8_t header1;
-    uint8_t mode; 
     uint8_t command;
     uint8_t byte_length;
     uint8_t parameter;
