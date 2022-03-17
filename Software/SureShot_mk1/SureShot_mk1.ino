@@ -4,6 +4,8 @@
 #include "Midi_variable.h"
 #include "EEPROM.h"
 
+
+bool flgSysExRemain = false;
 // The setup function runs once when you press reset or power the board
 void setup() {
   // Initialize all the pins as a pull-up input.
@@ -21,10 +23,8 @@ void setup() {
 
 // The loop function runs over and over again forever
 void loop() {
+
   MidiHandler();
-  /*only when serial received data is available, ComHandler is performed*/
- if ( Serial.available() )
- {
   ComHandler();  
- }
+
 }
