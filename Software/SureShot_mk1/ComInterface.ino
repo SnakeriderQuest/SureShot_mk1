@@ -117,9 +117,9 @@ void ComHandler()
 
   if(message.common.byte_length > 0)
   {
-    for(int index =0; index < message.common.byte_length;index++)
+    Serial.print("\nresult packet(incl. checksum):");
+    for(int index =0; index <= message.common.byte_length;index++)
     {
-      Serial.print("\nresult packet:");
       sprintf(sendPacket, "%02x", message.write_interface.bin[index]);
       Serial.print(sendPacket);
     }
