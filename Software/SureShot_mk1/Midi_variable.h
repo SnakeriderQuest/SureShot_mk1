@@ -24,7 +24,10 @@ const byte SYSEX_DESTINATION_SURESHOT     = 0x00;       /*SURESHOT*/
 const byte SYSEX_PROTOCOL_VERSION         = 0x01;       /*Ver.1*/
 const byte SYSEX_DESTINATION_HOST         = 0x40;
 
-const byte SYSEX_HEADER_SYSEX_START_OR_CONTINUE =   0x04;
-const byte SYSEX_HEADER_SYSEX_END_WITH_ONE_BYTE =   0x05;
-const byte SYSEX_HEADER_SYSEX_END_WITH_TWO_BYTE =   0x06;
-const byte SYSEX_HEADER_SYSEX_END_WITH_THREE_BYTE = 0x07;          
+const byte SYSEX_HEADER_SYSEX_START_OR_CONTINUE   = 0x04;
+const byte SYSEX_HEADER_SYSEX_END_WITH_ONE_BYTE   = 0x05;
+const byte SYSEX_HEADER_SYSEX_END_WITH_TWO_BYTE   = 0x06;
+const byte SYSEX_HEADER_SYSEX_END_WITH_THREE_BYTE = 0x07;    
+     
+const uint8_t SYSEX_RESPONSE_FIXED_BYTE_LENGTH    = 9;      /*Status, ID x3,Destination, Version, command, checksum, EOL*/
+const uint8_t SYSEX_RESPONSE_FIXED_START_BYTE_LENGTH    = 6;      /*Status, ID x3,Destination, Version*/

@@ -33,112 +33,112 @@ union Message
 { 
   struct
   {
-    uint8_t byte_length;    
-    uint8_t bin[18];
+    byte byte_length;    
+    byte bin[18];
   }write_interface;
 
   struct
   {
-    uint8_t byte_length;    
-    uint8_t bin[18];
+    byte byte_length;    
+    byte bin[18];
   }checksum_interface;
 
 
   struct 
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t bin[17];
+    byte byte_length;
+    byte command;
+    byte bin[17];
   }common;
 
   struct 
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t parameter;
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte parameter;
+    byte checksum;
   }request_protocol_version;
 
   struct
   {
-    uint8_t byte_length;    
-    uint8_t command;
-    uint8_t pad_nr;
-    uint8_t checksum;
+    byte byte_length;    
+    byte command;
+    byte pad_nr;
+    byte checksum;
   }play_request;
 
   struct
   { 
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t parameter;
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte parameter;
+    byte checksum;
   }read_midi_channel;
 
   struct 
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t midi_channel;
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte midi_channel;
+    byte checksum;
   }write_midi_channel;
 
   struct
   {
-    uint8_t byte_length;    
-    uint8_t command;
-    uint8_t parameter;
-    uint8_t checksum;
+    byte byte_length;    
+    byte command;
+    byte parameter;
+    byte checksum;
   }read_note;
 
   struct
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t pad_nr;
-    uint8_t note;
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte pad_nr;
+    byte note;
+    byte checksum;
   }write_single_note;
   
   struct write_all_note
   {
-    uint8_t byte_length;    
-    uint8_t command;
-    uint8_t note[16];
-    uint8_t checksum;
+    byte byte_length;    
+    byte command;
+    byte note[16];
+    byte checksum;
   }write_all_note;
 
   struct 
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t parameter;
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte parameter;
+    byte checksum;
   }read_velocity;
 
   struct 
   {
-    uint8_t command;
-    uint8_t byte_length;
-    uint8_t pad_nr;
-    uint8_t velocity;
-    uint8_t checksum;
+    byte command;
+    byte byte_length;
+    byte pad_nr;
+    byte velocity;
+    byte checksum;
   }write_single_velocity;
 
   struct
   {
-    uint8_t command;
-    uint8_t byte_length;
-    uint8_t velocity[16];
-    uint8_t checksum;
+    byte command;
+    byte byte_length;
+    byte velocity[16];
+    byte checksum;
   }write_all_velocity;
 
   struct
   {
-    uint8_t command;
-    uint8_t byte_length;
-    uint8_t parameter;
-    uint8_t checksum;
+    byte command;
+    byte byte_length;
+    byte parameter;
+    byte checksum;
   }write_eeprom;
 };
 
@@ -147,110 +147,110 @@ union Response
 {
   struct
   {
-    uint8_t byte_length;    
-    uint8_t bin[18];
-  }read_interface;
+    byte byte_length;    
+    byte bin[18];
+  }write_interface;
   struct
   {
-    uint8_t byte_length;    
-    uint8_t bin[18];
-  }read_interface;
+    byte byte_length;    
+    byte bin[18];
+  }checksum_interface;
   
   struct 
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t bin[17];
+    byte byte_length;
+    byte command;
+    byte bin[17];
   }common;
 
   struct 
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t protocol_version;
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte protocol_version;
+    byte checksum;
   }request_protocol_version;
 
   struct 
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t response;
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte response;
+    byte checksum;
   }play_request;
 
   struct 
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t midi_channel;
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte midi_channel;
+    byte checksum;
   }read_midi_channel;
 
   struct 
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t response;
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte response;
+    byte checksum;
   }write_midi_channel;
 
   struct 
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t note[TOTAL_BUTTONS];
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte note[TOTAL_BUTTONS];
+    byte checksum;
   }read_note; 
 
   struct 
   {
-    uint8_t byte_length;   
-    uint8_t command;
-    uint8_t response;
-    uint8_t checksum;
+    byte byte_length;   
+    byte command;
+    byte response;
+    byte checksum;
   }write_single_note;
 
   struct 
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t response;
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte response;
+    byte checksum;
   }write_all_note;
 
   struct 
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t velocity[TOTAL_BUTTONS];
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte velocity[TOTAL_BUTTONS];
+    byte checksum;
   }read_velocity; 
 
   struct 
   { 
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t response;
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte response;
+    byte checksum;
   }write_single_velocity;
 
   
   struct 
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t response;
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte response;
+    byte checksum;
   }write_all_velocity;
   
   struct 
   {
-    uint8_t byte_length;
-    uint8_t command;
-    uint8_t parameter;
-    uint8_t response;
-    uint8_t checksum;
+    byte byte_length;
+    byte command;
+    byte parameter;
+    byte response;
+    byte checksum;
   }write_eeprom;
   
 };
