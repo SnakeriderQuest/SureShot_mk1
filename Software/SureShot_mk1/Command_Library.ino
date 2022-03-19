@@ -1,9 +1,3 @@
-void set_header_mode(Response *response)
-{
-  response->common.header0 = HEADER_RESPONSE_FIRST;
-  response->common.header1 = HEADER_RESPONSE_SECCOND;
-  response->common.mode = MODE_SURESHOT;
-}
 
 /*0x00* request_protocol_version*/
 void request_protocol_version(Message *message, Response *response)
@@ -245,13 +239,12 @@ void write_eeprom(Message *message, Response *response)
 void ResponseChecksumCalculation(Response *response)
 {
   uint8_t sum =0;
-      sum = sum + response->common.mode;
       sum = sum + response->common.command;
-      sum = sum + response->common.byte_length;
-      for (int i=0; i < (response->common.byte_length -1); i++)
+      for (int i=0; i < (response->common.byte_length); i++)
       {
         sum = sum + response->common.bin[i];
       }
+      sum = (sum & 0x7F);
       response->common.bin[response->common.byte_length]=sum;
   return;
 }
