@@ -104,6 +104,7 @@ void ComHandler()
                     break;
                   }
                 }
+                break;
               }
            }
            else
