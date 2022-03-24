@@ -33,13 +33,11 @@ void MidiHandler()
 void noteOn(uint8_t channel, uint8_t pitch, uint8_t velocity) {
   uint8_t midi_command=0x90 | channel;
   midiEventPacket_t noteOn = {0x09, 0x90 , pitch, velocity};
-  MidiUSB.sendMIDI(noteOn);
-  MidiUSB.flush();
+  MIDI.sendNoteOn(pitch, velocity, MIDI_CHANNEL);
 }
  
 void noteOff(uint8_t channel, uint8_t pitch, uint8_t velocity) {
   uint8_t midi_command=0x80 | channel;
   midiEventPacket_t noteOff = {0x08, 0x80, pitch, 0};
-  MidiUSB.sendMIDI(noteOff);
-  MidiUSB.flush();
+    MIDI.sendNoteOff(pitch, velocity, MIDI_CHANNEL);
 }

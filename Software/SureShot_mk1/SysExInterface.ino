@@ -15,111 +15,47 @@ void onPacketReceived(const uint8_t* buffer, size_t size) {
 }
 */
 
-void ComHandler()
+void SysExHandler(byte* array, unsigned size)
 {
+  Serial.print("size:");
+  Serial.print(size);
+  Serial.print("\n");
+  Serial.print("array:");
+  for(int i =0; i < size; i++)
+  {
+    Serial.print(array[i],HEX);
+    Serial.print("\n");
+  }
+
+  
   char sendPacket[30];
   Message message;
-  message.write_interface.byte_length=0;
-  midiEventPacket_t first_rx = MidiUSB.read();
+  uint8_t total_length =size-SYSEX_RESPONSE_FIXED_START_BYTE_LENGTH;
+  message.write_interface.byte_length=size-SYSEX_RESPONSE_FIXED_START_BYTE_LENGTH - SYSEX_RESPONSE_FIXED_END_BYTE_LENGTH; /*comnmand + parameter*/
 
-  if(first_rx.header!=0)
-  {
-    Serial.print("first packet:");
-    sprintf(sendPacket, "%02x", first_rx.header);
-    Serial.print(sendPacket);
-    sprintf(sendPacket, "%02x", first_rx.byte1);
-    Serial.print(sendPacket);
-    sprintf(sendPacket, "%02x", first_rx.byte2);
-    Serial.print(sendPacket);
-    sprintf(sendPacket, "%02x", first_rx.byte3);
-    Serial.print(sendPacket);
-    Serial.print("\n");
-  }
+
+   if (   (array[0]==SYSEX_EXCLUSIVE_STATUS)
+      &&  (array[1]==SYSEX_ID_UPPER_BYTE)
+      &&  (array[2]==SYSEX_ID_MIDDLE_BYTE)      /*SysEx message to Bulbousbow*/
+      &&  (array[3]==SYSEX_ID_LOWER_BYTE)
+      &&  (array[4]==SYSEX_DESTINATION_SURESHOT)
+      &&  (array[5]==SYSEX_PROTOCOL_VERSION)
+      )
+      {
+        Serial.print("array2:\n");
+        for ( int index = 0;index < total_length ;index++ )        
+         {
+            message.write_interface.bin[index] = array[index + SYSEX_RESPONSE_FIXED_START_BYTE_LENGTH];
+            
+            Serial.print(message.write_interface.bin[index],HEX);
+            Serial.print("\n");
+         }
+      }
   
-  if (  (first_rx.header==SYSEX_HEADER_SYSEX_START_OR_CONTINUE)
-     && (first_rx.byte1==SYSEX_EXCLUSIVE_STATUS)
-     && (first_rx.byte2==SYSEX_ID_UPPER_BYTE)
-     && (first_rx.byte3==SYSEX_ID_MIDDLE_BYTE)      /*SysEx message to Bulbousbow*/
-     )
-  {
-     midiEventPacket_t second_rx = MidiUSB.read();
-  if(first_rx.header!=0)
-    {
-    Serial.print("second packet:");
-    sprintf(sendPacket, "%02x", second_rx.header);
-    Serial.print(sendPacket);
-    sprintf(sendPacket, "%02x", second_rx.byte1);
-    Serial.print(sendPacket);
-    sprintf(sendPacket, "%02x", second_rx.byte2);
-    Serial.print(sendPacket);
-    sprintf(sendPacket, "%02x", second_rx.byte3);
-    Serial.print(sendPacket);
-    Serial.print("\n");
-    }
-     if (  (  (second_rx.header==SYSEX_HEADER_SYSEX_START_OR_CONTINUE)
-           || (second_rx.header==SYSEX_HEADER_SYSEX_END_WITH_ONE_BYTE)
-           || (second_rx.header==SYSEX_HEADER_SYSEX_END_WITH_TWO_BYTE)
-           || (second_rx.header==SYSEX_HEADER_SYSEX_END_WITH_THREE_BYTE)    
-           )
-        && (second_rx.byte1==SYSEX_ID_LOWER_BYTE)
-        && (second_rx.byte2==SYSEX_DESTINATION_SURESHOT)
-        && (second_rx.byte3==SYSEX_PROTOCOL_VERSION)    /*SysEx message for Sureshot Ver.1*/
-        )
-     {
-        for ( int packet_number = 0;packet_number < 21;packet_number+=3 )
-        {
-          midiEventPacket_t rx = MidiUSB.read();
-              Serial.print(packet_number);
-              Serial.print("th byte:");
-              sprintf(sendPacket, "%02x", rx.header);
-              Serial.print(sendPacket);
-              sprintf(sendPacket, "%02x", rx.byte1);
-              Serial.print(sendPacket);
-              sprintf(sendPacket, "%02x", rx.byte2);
-              Serial.print(sendPacket);
-              sprintf(sendPacket, "%02x", rx.byte3);
-              Serial.print(sendPacket);
-              Serial.print("\n");
-          if (  (rx.header==SYSEX_HEADER_SYSEX_START_OR_CONTINUE)
-             || (rx.header==SYSEX_HEADER_SYSEX_END_WITH_ONE_BYTE)
-             || (rx.header==SYSEX_HEADER_SYSEX_END_WITH_TWO_BYTE)
-             || (rx.header==SYSEX_HEADER_SYSEX_END_WITH_THREE_BYTE)
-             )           
-           {
-              message.write_interface.bin[packet_number +0] = rx.byte1;
-              message.write_interface.bin[packet_number +1] = rx.byte2;
-              message.write_interface.bin[packet_number +2] = rx.byte3;
-              
-              if (  (rx.header==SYSEX_HEADER_SYSEX_END_WITH_ONE_BYTE)
-                 || (rx.header==SYSEX_HEADER_SYSEX_END_WITH_TWO_BYTE)
-                 || (rx.header==SYSEX_HEADER_SYSEX_END_WITH_THREE_BYTE)
-                 )
-              {
-                
-                for(int index=0; index<3;index++)
-                {
-                  if (message.write_interface.bin[packet_number + index]==SYSEX_END_OF_EXCLUSIVE)
-                  {
-                    message.write_interface.byte_length = (packet_number + index)-1;  /*before SYSEX_END_OF_EXCLUSIVE is the contents' body, -1*/
-                    break;
-                  }
-                }
-                break;
-              }
-           }
-           else
-           {
-              break;
-           }
-        }
-     }
-  }
-
-
   if(message.common.byte_length > 0)
   {
     Serial.print("\nresult packet(incl. checksum):");
-    for(int index =0; index <= message.common.byte_length;index++)
+    for(int index =0; index < message.common.byte_length;index++)
     {
       sprintf(sendPacket, "%02x", message.write_interface.bin[index]);
       Serial.print(sendPacket);
@@ -128,7 +64,7 @@ void ComHandler()
   }
  
 
-    if  (message.common.byte_length > 0)
+    if (message.common.byte_length > 0)
     {
       /*calculate checksum*/
       uint8_t checksum_of_packet = message.checksum_interface.bin[message.checksum_interface.byte_length];

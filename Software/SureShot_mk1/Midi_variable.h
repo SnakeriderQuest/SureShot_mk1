@@ -1,5 +1,5 @@
 
-#define MIDI_CHANNEL_DEFAULT        0x00
+#define MIDI_CHANNEL_DEFAULT        0x01
 #define VELOCITY_ARRAY_DEFAULT      {127,127,127,127,127,127,127,127,127,127,127,127,127,127,127,127}
 #define NOTE_ARRAY_DEFAULT          {36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51}
 
@@ -31,3 +31,4 @@ const byte SYSEX_HEADER_SYSEX_END_WITH_THREE_BYTE = 0x07;
      
 const uint8_t SYSEX_RESPONSE_FIXED_BYTE_LENGTH    = 9;      /*Status, ID x3,Destination, Version, command, checksum, EOL*/
 const uint8_t SYSEX_RESPONSE_FIXED_START_BYTE_LENGTH    = 6;      /*Status, ID x3,Destination, Version*/
+const uint8_t SYSEX_RESPONSE_FIXED_END_BYTE_LENGTH    = 2; 
