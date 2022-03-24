@@ -1,119 +1,112 @@
-void set_header_mode(Response *response)
-{
-  response->common.header0 = HEADER_RESPONSE_FIRST;
-  response->common.header1 = HEADER_RESPONSE_SECCOND;
-  response->common.mode = MODE_SURESHOT;
-}
-
 /*0x00* request_protocol_version*/
-void request_protocol_version(Message *message, Response *response)
+void request_protocol_version(SysExMessage *sysExMessage, SysExResponse *sysExResponse)
 {
-  response->common.command = message->common.command;
-  response->common.byte_length = 1;
-  response->request_protocol_version.protocol_version = PROTOCOL_VERSION;
-  ResponseChecksumCalculation(response);
+  sysExResponse->common.command = sysExMessage->common.command;
+  sysExResponse->common.byte_length = 1;
+  sysExResponse->request_protocol_version.protocol_version = PROTOCOL_VERSION;
+  SysExResponseChecksumCalculation(sysExResponse);
   return;
 }
 
 /*0x01* play_request*/
-void play_request(Message *message, Response *response)
+void play_request(SysExMessage *sysExMessage, SysExResponse *sysExResponse)
 {
-  response->common.command = message->common.command;
-  response->common.byte_length = 1;
+  sysExResponse->common.command = sysExMessage->common.command;
+  sysExResponse->common.byte_length = 1;
   /*Play MIDI velocity for 1sec*/
-  noteOn(MIDI_CHANNEL, NOTE[message->play_request.pad_nr], VELOCITY[message->play_request.pad_nr]);
+  noteOn(MIDI_CHANNEL, NOTE[sysExMessage->play_request.pad_nr], VELOCITY[sysExMessage->play_request.pad_nr]);
   delay(1000);
-  noteOff(MIDI_CHANNEL, NOTE[message->play_request.pad_nr], VELOCITY[message->play_request.pad_nr]);
-  response->play_request.response = RESPONSE_ACK;
-  ResponseChecksumCalculation(response);
+  noteOff(MIDI_CHANNEL, NOTE[sysExMessage->play_request.pad_nr], VELOCITY[sysExMessage->play_request.pad_nr]);
+  sysExResponse->play_request.response = RESPONSE_ACK;
+  SysExResponseChecksumCalculation(sysExResponse);
   return;
 }
 
 /*0x02 read_midi_channel*/
-void read_midi_channel(Message *message, Response *response)
+void read_midi_channel(SysExMessage *sysExMessage, SysExResponse *sysExResponse)
 {
-  response->common.command = message->common.command;
-  response->common.byte_length = 1;
-  response->read_midi_channel.midi_channel = MIDI_CHANNEL;
-  ResponseChecksumCalculation(response);
+  sysExResponse->common.command = sysExMessage->common.command;
+  sysExResponse->common.byte_length = 1;
+  sysExResponse->read_midi_channel.midi_channel = MIDI_CHANNEL;
+  SysExResponseChecksumCalculation(sysExResponse);
   return;
 }
 
 /*0x03 write_midi_channel*/
-void write_midi_channel(Message *message, Response *response)
+void write_midi_channel(SysExMessage *sysExMessage, SysExResponse *sysExResponse)
 {
-  response->common.command = message->common.command;
-  response->common.byte_length = 1;
-  uint8_t midi_channel = message->write_midi_channel.midi_channel;
+  sysExResponse->common.command = sysExMessage->common.command;
+  sysExResponse->common.byte_length = 1;
+  uint8_t midi_channel = sysExMessage->write_midi_channel.midi_channel;
 
    /*MIDI channel is set only channel number is valid*/
   if  ( (midi_channel <= MIDI_CHANNEL_MAX)
       &&(midi_channel >= MIDI_CHANNEL_MIN) 
       )
   {
-    MIDI_CHANNEL = message->write_midi_channel.midi_channel;
-    response->write_midi_channel.response=RESPONSE_ACK;
+    MIDI_CHANNEL = sysExMessage->write_midi_channel.midi_channel;
+    sysExResponse->write_midi_channel.response=RESPONSE_ACK;
   }
   else
   {
-    response->write_midi_channel.response=RESPONSE_NACK; 
+    sysExResponse->write_midi_channel.response=RESPONSE_NACK; 
   }
   
-  ResponseChecksumCalculation(response);
+  SysExResponseChecksumCalculation(sysExResponse);
   return;
 }
 
 /*0x04 read_note*/
-void read_note(Message *message, Response *response)
+void read_note(SysExMessage *sysExMessage, SysExResponse *sysExResponse)
 {
-  response->common.command = message->common.command;
-  response->common.byte_length = TOTAL_BUTTONS;
+  sysExResponse->common.command = sysExMessage->common.command;
+  sysExResponse->common.byte_length = TOTAL_BUTTONS;
 
-  for (byte i=0; i < response->common.byte_length ; i++)
+  for (byte i=0; i < sysExResponse->common.byte_length ; i++)
   {
-    response->read_note.note[i] = NOTE[i];
+    sysExResponse->read_note.note[i] = NOTE[i];
   }
-  ResponseChecksumCalculation(response);
+  SysExResponseChecksumCalculation(sysExResponse);
   return;
 }
 
 /*0x05 write_single_note*/
-void write_single_note(Message *message, Response *response)
+void write_single_note(SysExMessage *sysExMessage, SysExResponse *sysExResponse)
 {
-  response->common.command = message->common.command;
-  response->common.byte_length = 1;
-  uint8_t note = message->write_single_note.note;
+  sysExResponse->common.command = sysExMessage->common.command;
+  sysExResponse->common.byte_length = 1;
+  uint8_t note = sysExMessage->write_single_note.note;
      /*note is set only note number is valid*/
   if  ( ( (note <= NOTE_MAX)
         &&(note >= NOTE_MIN) 
         )
-      &&(message->write_single_note.pad_nr < TOTAL_BUTTONS)
+      &&(sysExMessage->write_single_note.pad_nr < TOTAL_BUTTONS)
       )
   {
-    NOTE[message->write_single_note.pad_nr]=note;
+    NOTE[sysExMessage->write_single_note.pad_nr]=note;
     
-    response->write_midi_channel.response=RESPONSE_ACK;
+    sysExResponse->write_midi_channel.response=RESPONSE_ACK;
   }
   else
   {
-    response->write_midi_channel.response=RESPONSE_NACK; 
+    sysExResponse->write_midi_channel.response=RESPONSE_NACK; 
   }
   
-  ResponseChecksumCalculation(response);
+  SysExResponseChecksumCalculation(sysExResponse);
   return;
 }
 
 /*0x06 write_all_note*/
-void write_all_note(Message *message, Response *response)
+void write_all_note(SysExMessage *sysExMessage, SysExResponse *sysExResponse)
 {
-  response->common.command = message->common.command;
-  response->common.byte_length = 1;
+  sysExResponse->common.command = sysExMessage->common.command;
+  sysExResponse->common.byte_length = 1;
   /*note is set only note number is valid*/
   bool note_valid = true;
   uint8_t note[TOTAL_BUTTONS];
   for(byte i=0;i < TOTAL_BUTTONS;i++)
   {
-    note[i] = message->write_all_note.note[i];
+    note[i] = sysExMessage->write_all_note.note[i];
     if( (note[i] > NOTE_MAX)
       ||(note[i] < NOTE_MIN)
       )
@@ -129,68 +122,68 @@ void write_all_note(Message *message, Response *response)
     {
       NOTE[i]=note[i];
     }
-    response->write_midi_channel.response=RESPONSE_ACK;
+    sysExResponse->write_midi_channel.response=RESPONSE_ACK;
   }
   else
   {
-    response->write_midi_channel.response=RESPONSE_NACK; 
+    sysExResponse->write_midi_channel.response=RESPONSE_NACK; 
   }
   
-  ResponseChecksumCalculation(response);
+  SysExResponseChecksumCalculation(sysExResponse);
   return;
 }
 
 /*0x07 read_velocity*/
-void read_velocity(Message *message, Response *response)
+void read_velocity(SysExMessage *sysExMessage, SysExResponse *sysExResponse)
 {
-  response->common.command = message->common.command;
-  response->common.byte_length = TOTAL_BUTTONS;
+  sysExResponse->common.command = sysExMessage->common.command;
+  sysExResponse->common.byte_length = TOTAL_BUTTONS;
 
-  for (byte i=0; i < response->common.byte_length ; i++)
+  for (byte i=0; i < sysExResponse->common.byte_length ; i++)
   {
-    response->read_velocity.velocity[i] = VELOCITY[i];
+    sysExResponse->read_velocity.velocity[i] = VELOCITY[i];
   }
-  ResponseChecksumCalculation(response);
+  SysExResponseChecksumCalculation(sysExResponse);
   return;
 }
 
 /*0x08 write_single_velocity*/
-void write_single_velocity(Message *message, Response *response)
+void write_single_velocity(SysExMessage *sysExMessage, SysExResponse *sysExResponse)
 {
-  response->common.command = message->common.command;
-  response->common.byte_length = 1;
-  uint8_t velocity = message->write_single_velocity.velocity;
+  sysExResponse->common.command = sysExMessage->common.command;
+  sysExResponse->common.byte_length = 1;
+  uint8_t velocity = sysExMessage->write_single_velocity.velocity;
 
      /*velocity is set only velocity number is valid*/
   if  ( ( (velocity <= VELOCITY_MAX)
         &&(velocity >= VELOCITY_MIN) 
         )
-      && (message->write_single_velocity.pad_nr < TOTAL_BUTTONS)
+      && (sysExMessage->write_single_velocity.pad_nr < TOTAL_BUTTONS)
       )
   {
-    VELOCITY[message->write_single_velocity.pad_nr]=velocity;
-    response->write_midi_channel.response=RESPONSE_ACK;
+    VELOCITY[sysExMessage->write_single_velocity.pad_nr]=velocity;
+    sysExResponse->write_midi_channel.response=RESPONSE_ACK;
   }
   else
   {
-    response->write_midi_channel.response=RESPONSE_NACK; 
+    sysExResponse->write_midi_channel.response=RESPONSE_NACK; 
   }
   
-  ResponseChecksumCalculation(response);
+  SysExResponseChecksumCalculation(sysExResponse);
   return;
 }
 
 /*0x09 write_all_velocity*/
-void write_all_velocity(Message *message, Response *response)
+void write_all_velocity(SysExMessage *sysExMessage, SysExResponse *sysExResponse)
 {
-  response->common.command = message->common.command;
-  response->common.byte_length = 1;
+  sysExResponse->common.command = sysExMessage->common.command;
+  sysExResponse->common.byte_length = 1;
   /*velocity is set only velocity number is valid*/
   bool velocity_valid = true;
   uint8_t velocity[TOTAL_BUTTONS];
   for(byte i=0;i < TOTAL_BUTTONS;i++)
   {
-    velocity[i] = message->write_all_velocity.velocity[i];
+    velocity[i] = sysExMessage->write_all_velocity.velocity[i];
     if( (velocity[i] > VELOCITY_MAX)
       ||(velocity[i] < VELOCITY_MIN)
       )
@@ -206,52 +199,51 @@ void write_all_velocity(Message *message, Response *response)
     {
       VELOCITY[i]=velocity[i];
     }
-    response->write_midi_channel.response=RESPONSE_ACK;
+    sysExResponse->write_midi_channel.response=RESPONSE_ACK;
   }
   else
   {
-    response->write_midi_channel.response=RESPONSE_NACK; 
+    sysExResponse->write_midi_channel.response=RESPONSE_NACK; 
   }
-  ResponseChecksumCalculation(response);
+  SysExResponseChecksumCalculation(sysExResponse);
   return;
 }
 
 /*0x0A write_eeprom*/
-void write_eeprom(Message *message, Response *response)
+void write_eeprom(SysExMessage *sysExMessage, SysExResponse *sysExResponse)
 {
-  response->common.command = message->common.command;
-  response->common.byte_length = 1;
-  response->write_eeprom.parameter = message->write_eeprom.parameter;
+  sysExResponse->common.command = sysExMessage->common.command;
+  sysExResponse->common.byte_length = 1;
+  sysExResponse->write_eeprom.parameter = sysExMessage->write_eeprom.parameter;
   /*parameter == PARAMETER_EEPROM_MEMORY, write memory to rom*/
-  if(message->write_eeprom.parameter == PARAMETER_EEPROM_MEMORY)
+  if(sysExMessage->write_eeprom.parameter == PARAMETER_EEPROM_MEMORY)
   {
     
     Eeprom_Write();
-    response->write_eeprom.response=RESPONSE_ACK;
+    sysExResponse->write_eeprom.response=RESPONSE_ACK;
   }
    /*parameter == PARAMETER_EEPROM_DEFAULT, write default values to rom*/
-  else if(message->write_eeprom.parameter == PARAMETER_EEPROM_DEFAULT)
+  else if(sysExMessage->write_eeprom.parameter == PARAMETER_EEPROM_DEFAULT)
   {
     Eeprom_Write_Default();
-    response->write_eeprom.response=RESPONSE_ACK;
+    sysExResponse->write_eeprom.response=RESPONSE_ACK;
   }
   else
   {
-    response->write_eeprom.response=RESPONSE_NACK;
+    sysExResponse->write_eeprom.response=RESPONSE_NACK;
   }
   
 }
 
-void ResponseChecksumCalculation(Response *response)
+void SysExResponseChecksumCalculation(SysExResponse *sysExResponse)
 {
   uint8_t sum =0;
-      sum = sum + response->common.mode;
-      sum = sum + response->common.command;
-      sum = sum + response->common.byte_length;
-      for (int i=0; i < (response->common.byte_length -1); i++)
+      sum = sum + sysExResponse->common.command;
+      for (int i=0; i < (sysExResponse->common.byte_length); i++)
       {
-        sum = sum + response->common.bin[i];
+        sum = sum + sysExResponse->common.bin[i];
       }
-      response->common.bin[response->common.byte_length]=sum;
+      sum = (sum & 0x7F);
+      sysExResponse->common.bin[sysExResponse->common.byte_length]=sum;
   return;
 }
