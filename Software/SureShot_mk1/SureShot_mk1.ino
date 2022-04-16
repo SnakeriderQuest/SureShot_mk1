@@ -22,8 +22,6 @@ void setup() {
     myPacketSerial.setPacketHandler(&onPacketReceived);
     */
   Eeprom_Handler();
-  Serial.print("***********************************MIDICHaneel is:");
-  Serial.print(MIDI_CHANNEL);
   MIDI.setHandleSystemExclusive(SysExHandler);
   MIDI.begin();
 }

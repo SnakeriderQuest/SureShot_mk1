@@ -5,7 +5,6 @@ void Eeprom_Handler()
       &&  (eeprom_status != EEPROM_WRITTEN_MODIFIED)
       )
   {
-    Serial.print("Eeprom_write_default");
     Eeprom_Write_Default();
   }
 
@@ -25,10 +24,6 @@ void Eeprom_Write_Default()
   EEPROM.put(EEPROM_VELOCITY_ADDRESS, velocity);
   EEPROM.put(EEPROM_NOTE_ADDRESS, note);
   
-  for(int i=0 ;i<16;i++)
-  {
-    Serial.write(EEPROM.read(EEPROM_VELOCITY_ADDRESS+i));
-  }
   Eeprom_Read();
   
 }
@@ -47,6 +42,4 @@ void Eeprom_Write()
   EEPROM.put(EEPROM_MIDI_CHANNEL_ADDRESS, MIDI_CHANNEL);
   EEPROM.put(EEPROM_VELOCITY_ADDRESS, VELOCITY);
   EEPROM.put(EEPROM_NOTE_ADDRESS, NOTE);
-  Serial.print("******************************************************EEPROM MIDI CH DUMP:");
-  Serial.print(EEPROM.read(EEPROM_MIDI_CHANNEL_ADDRESS));
 }
