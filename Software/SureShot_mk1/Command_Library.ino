@@ -233,7 +233,8 @@ void write_eeprom(Message *message, Response *response)
   {
     response->write_eeprom.response=RESPONSE_NACK;
   }
-  
+  ResponseChecksumCalculation(response);
+  return;
 }
 
 void ResponseChecksumCalculation(Response *response)
