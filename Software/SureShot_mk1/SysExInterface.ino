@@ -7,17 +7,6 @@ volatile byte received_data = 0;              //受信データ
 
 void SysExHandler(byte* array, unsigned size)
 {
-  Serial.print("size:");
-  Serial.print(size);
-  Serial.print("\n");
-  Serial.print("array:");
-  for(int i =0; i < size; i++)
-  {
-    Serial.print(array[i],HEX);
-    Serial.print("\n");
-  }
-
-  
   char sendPacket[30];
   Message message;
   uint8_t total_length =size-SYSEX_RESPONSE_FIXED_START_BYTE_LENGTH;
