@@ -15,8 +15,8 @@
           "category": "Contributed",
           "url": "https://github.com/nitroplasma/SureShot_mk1/raw/main/custom_board/Sureshot-0.0.1.zip",
           "archiveFileName": "Sureshot-0.0.1.zip",
-          "checksum": "SHA256:7b46b0d9e92dfd4eefa953c15e0c55318d4f14d4d820b6ed2443fa03da1c3e22-00000175",
-		  "size": "23279345",
+          "checksum": "MD5:c405b1ccb65446abb791244a5776d173",
+		  "size": "8159405",
 
           "boards": [
             {
