@@ -11,16 +11,11 @@
 #define cmd_write_eeprom              0x0a
 
 #define RESPONSE_ACK                  0x01
-#define RESPONSE_NACK                 0xFF
+#define RESPONSE_NACK                 0x40
 
 #define PROTOCOL_VERSION              0x00
 #define MODE_SURESHOT                 0x00
 
-#define HEADER_MESSAGE_FIRST          0xFF
-#define HEADER_MESSAGE_SECCOND        0x77
-
-#define HEADER_RESPONSE_FIRST          0xFF
-#define HEADER_RESPONSE_SECCOND        0xB7
 
 #define PARAMETER_FIXED                0x00
 #define PARAMETER_EEPROM_MEMORY        0x00
