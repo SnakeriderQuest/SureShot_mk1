@@ -1,10 +1,3 @@
-
-
-volatile uint8_t tempBuffer[64];               //受信生データ保存配列
-volatile boolean serial_update_flag = false;   //データの受信フラッグ
-volatile byte received_data = 0;              //受信データ
-
-
 void SysExHandler(byte* array, unsigned size)
 {
   char sendPacket[30];
